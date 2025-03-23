@@ -83,7 +83,8 @@ const ProfilePage = () => {
           <label htmlFor="avatar-upload" className="upload-image">
             <IconCamera
               style={{
-                backgroundColor: "lightGrey",
+                color: "var(--mantine-color-body)",
+                backgroundColor: "var(--mantine-primary-color-filled)",
                 padding: "5px",
                 height: "30px",
                 width: "30px",

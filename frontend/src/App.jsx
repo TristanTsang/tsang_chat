@@ -14,7 +14,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import Navbar from "./components/Navbar.jsx";
 
 function App() {
-  const { primaryColor } = useThemeStore();
+  const { mode, primaryColor } = useThemeStore();
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   useEffect(() => {
     checkAuth();
@@ -24,7 +24,7 @@ function App() {
     primaryColor: primaryColor,
   });
   return (
-    <MantineProvider theme={myTheme}>
+    <MantineProvider theme={myTheme} defaultColorScheme={mode}>
       {isCheckingAuth && !authUser ? (
         <div
           style={{

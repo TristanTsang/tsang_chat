@@ -2,8 +2,8 @@ import {
   Button,
   Group,
   Stack,
-  useMantineColorScheme,
   Paper,
+  useMantineColorScheme,
   Text,
   TextInput,
   ActionIcon,
@@ -13,21 +13,29 @@ import { useThemeStore } from "../store/useThemeStore";
 import "./styles/SettingsPage.css";
 
 const SettingsPage = () => {
-  const { primaryColor, updatePrimaryColor } = useThemeStore();
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const { primaryColor, mode, updatePrimaryColor, updateMode } =
+    useThemeStore();
+  const { setColorScheme } = useMantineColorScheme();
+
   return (
     <Stack align="center" className="outer">
       <h3 style={{ margin: "0px" }}>Theme</h3>
       <Group Group w="50%" justify="center">
         <Button
-          variant={colorScheme === "light" ? "filled" : "outline"}
-          onClick={() => setColorScheme("light")}
+          variant={mode === "light" ? "filled" : "outline"}
+          onClick={() => {
+            setColorScheme("light");
+            updateMode("light");
+          }}
         >
           Light mode
         </Button>
         <Button
-          variant={colorScheme === "dark" ? "filled" : "outline"}
-          onClick={() => setColorScheme("dark")}
+          variant={mode === "dark" ? "filled" : "outline"}
+          onClick={() => {
+            setColorScheme("dark");
+            updateMode("dark");
+          }}
         >
           Dark mode
         </Button>
