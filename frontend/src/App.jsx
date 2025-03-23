@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import "@mantine/core/styles.css";
+
+import { Loader, MantineProvider, Stack, createTheme } from "@mantine/core";
+import { useAuthStore } from "./store/useAuthStore";
+import { useEffect } from "react";
+import { useThemeStore } from "./store/useThemeStore.js";
+import { Routes, Route, Navigate } from "react-router-dom";
+import SignUpPage from "./pages/SignUpPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { primaryColor } = useThemeStore();
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
+  const myTheme = createTheme({
+    primaryColor: primaryColor,
+  });
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <MantineProvider theme={myTheme}>
+      {isCheckingAuth && !authUser ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Loader size={30}></Loader>
+        </div>
+      ) : (
+        <Stack
+          style={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0px",
+          }}
+        >
+          <Navbar />
+          <Routes>
+            <Route
+              path="/"
+              element={authUser ? <HomePage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/signup"
+              element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/login"
+              element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+            />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route
+              path="/profile"
+              element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+            />
+          </Routes>
+        </Stack>
+      )}
+    </MantineProvider>
+  );
 }
 
-export default App
+export default App;
