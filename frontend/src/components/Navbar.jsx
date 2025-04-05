@@ -21,7 +21,7 @@ const Navbar = () => {
       className="navbar"
       style={{
         display: "flex",
-        height: "2rem",
+
         justifyContent: "space-between",
         paddingLeft: "2rem",
         paddingRight: "2rem",

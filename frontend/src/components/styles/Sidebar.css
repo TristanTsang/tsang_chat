@@ -1,0 +1,15 @@
+.userButton {
+  display: flex;
+  background-color: transparent;
+  justify-content: start;
+  align-items: start;
+  color: var(--mantine-color-bright);
+  padding: 0px;
+  border-radius: 0%;
+  margin: 0px;
+}
+
+.userButton:hover {
+  background-color: var(--mantine-primary-color-light-hover);
+  color: black;
+}

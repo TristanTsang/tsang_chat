@@ -189,7 +189,7 @@ const SettingsPage = () => {
             </div>
 
             <Group m="10px">
-              <TextInput flex={1}></TextInput>
+              <TextInput readOnly="true" flex={1}></TextInput>
               <ActionIcon size="36">
                 <IconSend stroke="2px"></IconSend>
               </ActionIcon>
