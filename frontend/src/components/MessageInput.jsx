@@ -1,4 +1,4 @@
-import { Group, TextInput, ActionIcon } from "@mantine/core";
+import { TextInput, ActionIcon } from "@mantine/core";
 import { IconSend, IconPhotoPlus, IconX } from "@tabler/icons-react";
 import { useState, useRef } from "react";
 import { useChatStore } from "../store/useChatStore";
@@ -46,7 +46,17 @@ const MessageInput = () => {
 
   return (
     <form onSubmit={handleSendMessage} style={{ position: "relative" }}>
-      <Group m="10px" gap="5px" mb="30px">
+      <div
+        style={{
+          display: "flex",
+          gap: "5px",
+          paddingLeft: "10px",
+          marginTop: "10px",
+          marginBottom: "10px",
+          boxSizing: "border-box",
+          paddingRight: "10px",
+        }}
+      >
         {imagePreview && (
           <div>
             <img
@@ -101,7 +111,7 @@ const MessageInput = () => {
         >
           <IconSend stroke="2px"></IconSend>
         </ActionIcon>
-      </Group>
+      </div>
     </form>
   );
 };

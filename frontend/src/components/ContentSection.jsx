@@ -1,17 +1,32 @@
 import { Group, Stack, Text, Divider } from "@mantine/core";
 import MessageInput from "./MessageInput";
 import { useChatStore } from "../store/useChatStore";
+import { useAuthStore } from "../store/useAuthStore.js";
+import { formatMessageTime } from "../lib/utils.js";
+import { useEffect } from "react";
 const ContentSection = () => {
-  const { selectedUser } = useChatStore();
+  const { selectedUser, getMessages, messages } = useChatStore();
+  const { authUser } = useAuthStore();
+  useEffect(() => {
+    getMessages(selectedUser._id);
+  }, [getMessages, selectedUser._id]);
+
   return (
     <div
       style={{
+        width: "67%",
         display: "flex",
         flexGrow: 1,
-        height: "100%",
       }}
     >
-      <Stack gap="5px" w="100%">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          flexGrow: "1",
+        }}
+      >
         <Group p="10px" gap="10px">
           <img
             height="50px"
@@ -30,47 +45,68 @@ const ContentSection = () => {
         </Group>
 
         <Divider></Divider>
-
         <div
           style={{
-            flexGrow: "1",
-            overflow: "scroll",
+            width: "100%",
+            flexGrow: 1,
             display: "flex",
+            overflow: "scroll",
+
             flexDirection: "column",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignSelf: "flex-end",
-              alignItems: "end",
-            }}
-          >
-            <Text size="xs" pr="15px">
-              12:02 pm
-            </Text>
-            <div style={{ display: "flex", flexDirection: "row" }}>
+          {messages.map((message) => (
+            <div
+              key={message._id}
+              style={{
+                display: "flex",
+                maxWidth: "67%",
+                flexDirection: "column",
+                alignSelf: (message.senderId = authUser._id
+                  ? "flex-end"
+                  : "flex-start"),
+
+                alignItems: (message.senderId = authUser._id ? "end" : "start"),
+              }}
+            >
+              <Text size="xs" mr="15px" ml="15px" mt="10px">
+                {formatMessageTime(message.createdAt)}
+              </Text>
+
               <divs
                 style={{
-                  padding: "5px",
-                  marginRight: "10px",
-                  maxWidth: "75%",
+                  padding: "7.5px",
+                  marginRight: "15px",
+                  marginLeft: "15px",
+
                   textAlign: "left",
                   justifyContent: "end",
                   backgroundColor: "var(--mantine-primary-color-filled",
-                  borderRadius: "10px 10px 0px 10px",
+
+                  borderRadius: (message.senderId = authUser._id
+                    ? "10px 10px 0px 10px"
+                    : "10px 10px 10px 0px"),
                 }}
               >
-                <Text size="md">
-                  I&apos;m doing great! Just working on some new features.
-                </Text>
+                {message.image && (
+                  <img
+                    style={{
+                      borderRadius: "10px 10px 10px 10px",
+
+                      width: "150px",
+                      height: "150px",
+                    }}
+                    src={message.image}
+                    alt="attachment"
+                  ></img>
+                )}
+                {message.text && <Text size="md">{message.text}</Text>}
               </divs>
             </div>
-          </div>
+          ))}
         </div>
         <MessageInput></MessageInput>
-      </Stack>
+      </div>
     </div>
   );
 };
