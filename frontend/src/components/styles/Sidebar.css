@@ -13,3 +13,27 @@
   background-color: var(--mantine-primary-color-light-hover);
   color: black;
 }
+.userButton {
+  background-color: var(--mantine-color-default-hover);
+  color: black;
+}
+
+.show-online:hover {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sidebar-profile-picture {
+  border-radius: 50%;
+}
+.sidebar {
+  width: 250px;
+}
+@media (max-width: 600px) {
+  .hide-on-small {
+    display: none;
+  }
+  .sidebar {
+    width: 55px;
+  }
+}

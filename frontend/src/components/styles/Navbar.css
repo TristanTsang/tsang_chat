@@ -11,3 +11,12 @@
   z-index: 0;
   height: 3rem;
 }
+
+@media (max-width: 600px) {
+  .hide {
+    display: none;
+  }
+  .icons {
+    gap: 5px;
+  }
+}

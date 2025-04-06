@@ -50,18 +50,19 @@ const Navbar = () => {
           height: "100%",
           justifyContent: "center",
 
-          gap: "20px",
+          gap: "12.5px",
         }}
       >
         <Link to="/settings" style={buttonStyle}>
           <IconSettings></IconSettings>
-          Settings
+          <p className="hide">Settings</p>
         </Link>
+
         {authUser && (
           <>
             <Link to="/profile" style={buttonStyle}>
               <IconUserCircle></IconUserCircle>
-              Profile
+              <p className="hide">Profile</p>
             </Link>
             <Button
               onClick={() => {
@@ -76,7 +77,7 @@ const Navbar = () => {
               }}
             >
               <IconLogout></IconLogout>
-              Logout
+              <p className="hide">Logout</p>
             </Button>
           </>
         )}

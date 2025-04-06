@@ -14,15 +14,20 @@ import { useThemeStore } from "../store/useThemeStore";
 import "./styles/SettingsPage.css";
 
 const SettingsPage = () => {
-  const { primaryColor, mode, updatePrimaryColor, updateMode } =
-    useThemeStore();
+  const {
+    primaryColor,
+    mode,
+    updatePrimaryColor,
+    updateMode,
+    primaryTextColor,
+  } = useThemeStore();
   const { setColorScheme } = useMantineColorScheme();
 
   return (
     <ScrollArea>
       <Stack align="center" className="outer">
         <h3 style={{ margin: "0px" }}>Theme</h3>
-        <Group Group w="50%" justify="center">
+        <Group justify="center">
           <Button
             variant={mode === "light" ? "filled" : "outline"}
             onClick={() => {
@@ -125,6 +130,7 @@ const SettingsPage = () => {
 
         <h3 style={{ margin: "0px" }}>Preview</h3>
         <Paper
+          maw="750px"
           className="preview-container"
           radius="sm"
           w="75%"
@@ -133,7 +139,7 @@ const SettingsPage = () => {
           shadow="lg"
           p="10px"
         >
-          <Paper w="50%" shadow="xs">
+          <Paper shadow="xs" maw="500px" className="preview">
             <Stack>
               <Paper>
                 <Group p="10px" gap="10px">
@@ -183,10 +189,12 @@ const SettingsPage = () => {
                   borderRadius: "10px 10px 0px 10px",
                 }}
               >
-                <Text size="md">
+                <Text c={primaryTextColor} size="md">
                   I&apos;m doing great! Just working on some new features.
                 </Text>
-                <Text size="xs">12:02 pm</Text>
+                <Text c={primaryTextColor} size="xs">
+                  12:02 pm
+                </Text>
               </div>
 
               <Group m="10px">

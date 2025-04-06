@@ -22,6 +22,7 @@ function App() {
 
   const myTheme = createTheme({
     primaryColor: primaryColor,
+    autoContrast: true,
   });
   return (
     <MantineProvider theme={myTheme} defaultColorScheme={mode}>

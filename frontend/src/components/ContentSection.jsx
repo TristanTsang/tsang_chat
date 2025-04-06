@@ -3,13 +3,33 @@ import MessageInput from "./MessageInput";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore.js";
 import { formatMessageTime } from "../lib/utils.js";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 const ContentSection = () => {
-  const { selectedUser, getMessages, messages } = useChatStore();
-  const { authUser } = useAuthStore();
+  const {
+    selectedUser,
+    getMessages,
+    messages,
+    subscribeToMessages,
+    unsubscribeToMessages,
+  } = useChatStore();
+  const messageEndRef = useRef(null);
+  const { authUser, onlineUsers } = useAuthStore();
   useEffect(() => {
     getMessages(selectedUser._id);
-  }, [getMessages, selectedUser._id]);
+    subscribeToMessages();
+    return () => unsubscribeToMessages();
+  }, [
+    getMessages,
+    selectedUser._id,
+    subscribeToMessages,
+    unsubscribeToMessages,
+  ]);
+
+  useEffect(() => {
+    if (messageEndRef.current && messages) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
     <div
@@ -28,18 +48,37 @@ const ContentSection = () => {
         }}
       >
         <Group p="10px" gap="10px">
-          <img
-            height="50px"
-            src={selectedUser.profilePic || "/avatar.png"}
-            alt={selectedUser.fullName}
-            className="sidebar-profile-picture"
-          ></img>
+          <div style={{ position: "relative", height: "50px", width: "50px" }}>
+            {" "}
+            <img
+              height="50px"
+              src={selectedUser.profilePic || "/avatar.png"}
+              alt={selectedUser.fullName}
+              className="sidebar-profile-picture"
+            ></img>
+            {onlineUsers.includes(selectedUser?._id) && (
+              <div
+                style={{
+                  position: "absolute",
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: "50%",
+                  bottom: "0px",
+                  right: "0px",
+                  border: "2px solid var(--mantine-color-default)",
+
+                  backgroundColor: "green",
+                }}
+              ></div>
+            )}
+          </div>
+
           <Stack gap="0px">
             <Text size="sm" m="0" ta="left">
               {selectedUser.fullName}
             </Text>
             <Text size="xs" m="0" ta="left">
-              Online
+              {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
             </Text>
           </Stack>
         </Group>
@@ -58,22 +97,22 @@ const ContentSection = () => {
           {messages.map((message) => (
             <div
               key={message._id}
+              ref={messageEndRef}
               style={{
                 display: "flex",
                 maxWidth: "67%",
                 flexDirection: "column",
-                alignSelf: (message.senderId = authUser._id
-                  ? "flex-end"
-                  : "flex-start"),
+                alignSelf:
+                  message.senderId === authUser._id ? "flex-end" : "flex-start",
 
-                alignItems: (message.senderId = authUser._id ? "end" : "start"),
+                alignItems: message.senderId === authUser._id ? "end" : "start",
               }}
             >
               <Text size="xs" mr="15px" ml="15px" mt="10px">
                 {formatMessageTime(message.createdAt)}
               </Text>
 
-              <divs
+              <div
                 style={{
                   padding: "7.5px",
                   marginRight: "15px",
@@ -81,11 +120,16 @@ const ContentSection = () => {
 
                   textAlign: "left",
                   justifyContent: "end",
-                  backgroundColor: "var(--mantine-primary-color-filled",
 
-                  borderRadius: (message.senderId = authUser._id
-                    ? "10px 10px 0px 10px"
-                    : "10px 10px 10px 0px"),
+                  backgroundColor:
+                    message.senderId === authUser._id
+                      ? "var(--mantine-primary-color-filled"
+                      : "var(--mantine-color-placeholder",
+
+                  borderRadius:
+                    message.senderId === authUser._id
+                      ? "10px 10px 0px 10px"
+                      : "10px 10px 10px 0px",
                 }}
               >
                 {message.image && (
@@ -100,8 +144,19 @@ const ContentSection = () => {
                     alt="attachment"
                   ></img>
                 )}
-                {message.text && <Text size="md">{message.text}</Text>}
-              </divs>
+                {message.text && (
+                  <Text
+                    size="md"
+                    c={
+                      message.senderId === authUser._id
+                        ? "var(--mantine-primary-color-contrast)"
+                        : "black"
+                    }
+                  >
+                    {message.text}
+                  </Text>
+                )}
+              </div>
             </div>
           ))}
         </div>
